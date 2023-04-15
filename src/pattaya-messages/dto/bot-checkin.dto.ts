@@ -5,6 +5,10 @@ export type BotCheckinDto = {
     os?: string
     username?: string
     hostname?: string
+    processName?: string
+    processId?: number
+    architecture?: string
+    integrity?: string
     country?: string
     hwid?: string
 }
