@@ -25,14 +25,12 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
   afterInit(server: Server) {
     this.logger.log('Socket.io server initialized');
     setInterval(async () => {
-      const data = await this.pattayaMessagesService.getOnlineBot()
       const response: ResponseMessageDto = {
         success: true,
-        message: 'Response all online bot',
-        data
+        message: 'Greet from server!!!',
       }
-      this.server.emit('panel_received_online_bot_data', response);
-      this.logger.log(`Response online bot: ${response.data}`);
+      this.server.emit('panel_received_server_heartbeat', response);
+      this.logger.log(`Response server heartbeat: ${response.message}`);
     }, 10000);
   }
 
