@@ -49,10 +49,9 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
     if(!this.panelGuard.validateRequest(client) || !this.botGuard.validateRequest(client)){
       const response: ResponseMessageDto = {
         success: false,
-        message: 'Fuck off. Go away!!',
+        message: 'Unknown client tried to connect to server',
       }
       this.server.emit('panel_received_server_heartbeat', response);
-      this.server.emit('bot_received_server_heartbeat', response);
       client.disconnect();
     }
   }
