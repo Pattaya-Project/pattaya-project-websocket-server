@@ -46,7 +46,7 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
 
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
-    if(!this.panelGuard.validateRequest(client)){
+    if(!this.panelGuard.validateRequest(client) || !this.botGuard.validateRequest(client)){
       const response: ResponseMessageDto = {
         success: false,
         message: 'Fuck off. Go away!!',
