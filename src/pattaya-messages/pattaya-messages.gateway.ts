@@ -46,14 +46,43 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
 
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
-    if(!this.panelGuard.validateRequest(client) || !this.botGuard.validateRequest(client)){
-      const response: ResponseMessageDto = {
-        success: false,
-        message: 'Unknown client tried to connect to server',
+    let peer = ''
+    try {
+      peer = client.handshake.headers.authorization.substring(0, 7)
+      switch (peer) {
+        case '######':
+            if(!this.panelGuard.validateRequest(client)){
+              const response: ResponseMessageDto = {
+                success: false,
+                message: 'Unknown panel tried to connect to server',
+              }
+              this.server.emit('panel_received_server_heartbeat', response);
+              client.disconnect();
+            }
+          break;
+        case '$$$$$$':
+            if(!this.botGuard.validateRequest(client)){
+              const response: ResponseMessageDto = {
+                success: false,
+                message: 'Unknown bot tried to connect to server',
+              }
+              this.server.emit('panel_received_server_heartbeat', response);
+              client.disconnect();
+            }
+          break;
+        default:
+          const response: ResponseMessageDto = {
+            success: false,
+            message: 'Unknown peer tried to connect to server',
+          }
+          this.server.emit('panel_received_server_heartbeat', response);
+          client.disconnect();
+          break;
       }
-      this.server.emit('panel_received_server_heartbeat', response);
+    } catch (error) {
       client.disconnect();
     }
+
   }
 
   async handleDisconnect(client: Socket) {

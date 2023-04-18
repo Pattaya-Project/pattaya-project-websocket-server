@@ -16,7 +16,7 @@ export class PanelAuthGuard implements CanActivate {
 
 
   validateRequest(request: any): boolean {
-    const token = request.handshake.headers.authorization.replace("Bearer ", '')
+    const token = request.handshake.headers.authorization.replace("###### ", '')
     return token === this.configService.get<string>('app.server-token') ? true : false
   }
 }
