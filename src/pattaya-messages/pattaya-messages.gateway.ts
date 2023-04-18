@@ -49,28 +49,32 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
     let peer = ''
     try {
       peer = client.handshake.headers.authorization.substring(0, 7)
+      console.log(client.handshake.headers.authorization)
       switch (peer) {
-        case '######':
-            if(!this.panelGuard.validateRequest(client)){
-              const response: ResponseMessageDto = {
-                success: false,
-                message: 'Unknown panel tried to connect to server',
-              }
-              this.server.emit('panel_received_server_heartbeat', response);
-              client.disconnect();
+        case "###### ": {
+          if(!this.panelGuard.validateRequest(client)){
+            const response: ResponseMessageDto = {
+              success: false,
+              message: 'Unknown panel tried to connect to server',
             }
-          break;
-        case '$$$$$$':
-            if(!this.botGuard.validateRequest(client)){
-              const response: ResponseMessageDto = {
-                success: false,
-                message: 'Unknown bot tried to connect to server',
-              }
-              this.server.emit('panel_received_server_heartbeat', response);
-              client.disconnect();
+            this.server.emit('panel_received_server_heartbeat', response);
+            client.disconnect();
+          }
+        break;
+        }
+            
+        case "$$$$$$ ": {
+          if(!this.botGuard.validateRequest(client)){
+            const response: ResponseMessageDto = {
+              success: false,
+              message: 'Unknown bot tried to connect to server',
             }
-          break;
-        default:
+            this.server.emit('panel_received_server_heartbeat', response);
+            client.disconnect();
+          }
+        break;
+        }
+        default: {
           const response: ResponseMessageDto = {
             success: false,
             message: 'Unknown peer tried to connect to server',
@@ -78,6 +82,7 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
           this.server.emit('panel_received_server_heartbeat', response);
           client.disconnect();
           break;
+        }
       }
     } catch (error) {
       client.disconnect();
