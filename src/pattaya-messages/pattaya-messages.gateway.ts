@@ -1,9 +1,11 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
 import { PattayaMessagesService } from './pattaya-messages.service';
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { BotCheckinDto } from './dto/bot-checkin.dto';
 import { ResponseMessageDto } from './dto/response-message.dto';
+import { PanelAuthGuard } from './guard/panel-auth.guard';
+import { ConfigService } from '@nestjs/config';
 
 
 @WebSocketGateway({ 
@@ -17,10 +19,14 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
   private readonly logger = new Logger(PattayaMessagesGateway.name);
 
 
+  
+
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly pattayaMessagesService: PattayaMessagesService)  {}
+  constructor(private readonly pattayaMessagesService: PattayaMessagesService,
+    private readonly panelGuard: PanelAuthGuard, private readonly configService: ConfigService
+    )  {}
 
   afterInit(server: Server) {
     this.logger.log('Socket.io server initialized');
@@ -31,11 +37,19 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
       }
       this.server.emit('panel_received_server_heartbeat', response);
       this.logger.log(`Response server heartbeat: ${response.message}`);
-    }, 10000);
+    }, this.configService.get<number>('app.server-heartbeat-delay'));
   }
 
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
+    if(!this.panelGuard.validateRequest(client)){
+      const response: ResponseMessageDto = {
+        success: false,
+        message: 'Fuck off. Go away!!',
+      }
+      this.server.emit('panel_received_server_heartbeat', response);
+      client.disconnect();
+    }
   }
 
   async handleDisconnect(client: Socket) {
@@ -62,6 +76,7 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
     }
   }
 
+  @UseGuards(PanelAuthGuard)
   @SubscribeMessage('panel_request_bot_data')
   async requestBotData(@MessageBody() request: any, @ConnectedSocket() client: Socket){
     this.logger.log(`panel_request_bot_data called`)
