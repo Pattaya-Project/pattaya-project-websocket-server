@@ -16,7 +16,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
     load: [() => {
       return yaml.load(
-        readFileSync(join(process.cwd(),"assets","config", "app.config.yaml"), 'utf8'),
+        readFileSync(join(__dirname + "../../config", 'app.config.yaml'), 'utf8')
       ) as Record<string, any>;
     }],
   })

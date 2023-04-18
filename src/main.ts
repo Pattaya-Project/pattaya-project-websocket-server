@@ -8,12 +8,12 @@ import * as yaml from 'js-yaml';
 
 
 const config = yaml.load(
-  readFileSync(join(process.cwd(), 'assets', 'config', 'app.config.yaml'), 'utf8')
+  readFileSync(join(__dirname + "../../config", 'app.config.yaml'), 'utf8')
 ) as Record<string, any>;
 
 
 async function bootstrap() {
-  const banner = readFileSync(join(process.cwd(), 'assets', 'banner', 'pattaya.txt'), 'utf8')
+  const banner = readFileSync(join(__dirname + "../../banner", 'pattaya.txt'), 'utf8')
   console.log(colors.rainbow(`${banner}`));
 
   console.log(colors.inverse(`name: ${config.app.name}`)); 
