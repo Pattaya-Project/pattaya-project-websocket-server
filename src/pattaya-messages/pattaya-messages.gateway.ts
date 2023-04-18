@@ -49,7 +49,7 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
     let peer = ''
     try {
       peer = client.handshake.headers.authorization.substring(0, 7)
-      console.log(client.handshake.headers.authorization)
+      this.logger.log(`Request token: ${client.handshake.headers.authorization}`);
       switch (peer) {
         case "###### ": {
           if(!this.panelGuard.validateRequest(client)){
@@ -59,6 +59,12 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
             }
             this.server.emit('panel_received_server_heartbeat', response);
             client.disconnect();
+          }else {
+            const response: ResponseMessageDto = {
+              success: false,
+              message: 'New panel has join!',
+            }
+            this.server.emit('panel_received_server_heartbeat', response);
           }
         break;
         }
@@ -71,6 +77,12 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
             }
             this.server.emit('panel_received_server_heartbeat', response);
             client.disconnect();
+          }else {
+            const response: ResponseMessageDto = {
+              success: false,
+              message: 'New bot has join!',
+            }
+            this.server.emit('panel_received_server_heartbeat', response);
           }
         break;
         }
@@ -85,10 +97,16 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
         }
       }
     } catch (error) {
+      const response: ResponseMessageDto = {
+        success: false,
+        message: 'Seem Junk request to server!',
+      }
+      this.server.emit('panel_received_server_heartbeat', response);
       client.disconnect();
     }
 
   }
+
 
   async handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
