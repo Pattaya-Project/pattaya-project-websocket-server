@@ -6,6 +6,7 @@ import { BotCheckinDto } from './dto/bot-checkin.dto';
 import { ResponseMessageDto } from './dto/response-message.dto';
 import { PanelAuthGuard } from './guard/panel-auth.guard';
 import { ConfigService } from '@nestjs/config';
+import { BotAuthGuard } from './guard/bot-auth.guard';
 
 
 @WebSocketGateway({ 
@@ -24,8 +25,11 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly pattayaMessagesService: PattayaMessagesService,
-    private readonly panelGuard: PanelAuthGuard, private readonly configService: ConfigService
+  constructor(
+    private readonly pattayaMessagesService: PattayaMessagesService,
+    private readonly panelGuard: PanelAuthGuard,
+    private readonly botGuard: BotAuthGuard,  
+    private readonly configService: ConfigService
     )  {}
 
   afterInit(server: Server) {
