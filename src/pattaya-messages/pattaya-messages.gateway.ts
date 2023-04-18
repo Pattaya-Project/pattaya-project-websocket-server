@@ -52,6 +52,7 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
         message: 'Fuck off. Go away!!',
       }
       this.server.emit('panel_received_server_heartbeat', response);
+      this.server.emit('bot_received_server_heartbeat', response);
       client.disconnect();
     }
   }
