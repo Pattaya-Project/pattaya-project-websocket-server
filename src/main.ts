@@ -28,7 +28,7 @@ async function bootstrap() {
   console.log(colors.green.underline('contact: pattaya.dev@unknownclub.net'))
   console.log(colors.blue.underline('visite: https://www.unknownclub.net/'))
   console.log('\n')
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {logger: config.app.logger});
   await app.listen(config.app.port);
 }
 bootstrap();

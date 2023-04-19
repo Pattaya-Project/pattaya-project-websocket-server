@@ -1,0 +1,39 @@
+{
+  "name": "pattaya-project-websocket-server-default-root",
+  "version": "0.0.1",
+  "description": "",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "@nestjs/common": "^9.0.0",
+    "@nestjs/config": "^2.3.1",
+    "@nestjs/core": "^9.0.0",
+    "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-socket.io": "^9.4.0",
+    "@nestjs/websockets": "^9.4.0",
+    "@prisma/client": "^4.12.0",
+    "@types/figlet": "^1.5.5",
+    "colors": "^1.4.0",
+    "figlet": "^1.6.0",
+    "js-yaml": "^4.1.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.2.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
