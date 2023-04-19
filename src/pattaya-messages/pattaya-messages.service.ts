@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
-import { Bot, Prisma } from '@prisma/client';
 import { BotCheckinDto } from './dto/bot-checkin.dto';
 
 
