@@ -6,4 +6,4 @@ app:
   server-token: '9oqjTmHkRJFxVM865gR9VwOhz2DMddYsnAozN9j4Tus'
   bot-token: 'zilVjQAv5ZdCk0Ybe3t5RvqhUHevwPgIVA84gRE7GRU'
   server-heartbeat-delay: 10000
-  logger: false
+  logger: true
