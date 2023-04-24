@@ -1,12 +1,14 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
 import { PattayaMessagesService } from './pattaya-messages.service';
-import { Logger, UseGuards } from '@nestjs/common';
+import { Logger, UseGuards, ValidationPipe } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { BotCheckinDto } from './dto/bot-checkin.dto';
 import { ResponseMessageDto } from './dto/response-message.dto';
 import { PanelAuthGuard } from './guard/panel-auth.guard';
 import { ConfigService } from '@nestjs/config';
 import { BotAuthGuard } from './guard/bot-auth.guard';
+import { PanelSendBotTaskDto } from './dto/panel-send-bot-task.dto';
+import { StringToObject } from './decorator/string-to-object.decorator';
 
 
 @WebSocketGateway({ 
@@ -147,5 +149,13 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
   }
 
 
+  @UseGuards(PanelAuthGuard)
+  @SubscribeMessage('panel_send_bot_task')
+  async sendBotTask(@StringToObject() request: PanelSendBotTaskDto, @ConnectedSocket() client: Socket){
+    this.logger.log(`panel_send_bot_task: ${JSON.stringify(request)}`)
+    this.server.to(request.socketId).emit('bot_receive_task', "Hi Bot")
+    this.server.emit(`panel_terminal_bot_task_result_${request.hwid}`, "Hi Panel")
+  }
 
 }
+
