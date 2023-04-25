@@ -36,7 +36,8 @@
     "figlet": "^1.6.0",
     "js-yaml": "^4.1.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

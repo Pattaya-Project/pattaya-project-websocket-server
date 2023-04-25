@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { BotAuthGuard } from './guard/bot-auth.guard';
 import { PanelSendBotTaskDto } from './dto/panel-send-bot-task.dto';
 import { StringToObject } from './decorator/string-to-object.decorator';
-
+import { v4 as uuidv4 } from 'uuid';
 
 @WebSocketGateway({ 
   namespace: '/',
@@ -152,9 +152,24 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
   @UseGuards(PanelAuthGuard)
   @SubscribeMessage('panel_send_bot_task')
   async sendBotTask(@StringToObject() request: PanelSendBotTaskDto, @ConnectedSocket() client: Socket){
+    request.taskId = uuidv4()
     this.logger.log(`panel_send_bot_task: ${JSON.stringify(request)}`)
-    this.server.to(request.socketId).emit('bot_receive_task', "Hi Bot")
-    this.server.emit(`panel_terminal_bot_task_result_${request.hwid}`, "Hi Panel")
+    const result = await this.pattayaMessagesService.stampTask(request)
+    if(result)
+    {
+      const response: ResponseMessageDto = {
+        success: true,
+        message: `Tasked bot ${request.hwid} with command ${request.command}`,
+      }
+      this.server.emit(`panel_terminal_bot_task_result_${request.hwid}`, response)
+      this.server.to(request.socketId).emit('bot_receive_task', "Hi Bot")
+    } else {
+      const response: ResponseMessageDto = {
+        success: false,
+        message: `Failed to stamp bot task`,
+      }
+      this.server.emit(`panel_terminal_bot_task_result_${request.hwid}`, response)
+    }
   }
 
 }
