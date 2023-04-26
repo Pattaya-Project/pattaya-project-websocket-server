@@ -22,9 +22,6 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
 
   private readonly logger = new Logger(PattayaMessagesGateway.name);
 
-
-  
-
   @WebSocketServer()
   server: Server;
 
