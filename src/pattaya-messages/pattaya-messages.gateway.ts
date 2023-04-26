@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { BotAuthGuard } from './guard/bot-auth.guard';
 import { PanelSendBotTaskDto } from './dto/panel-send-bot-task.dto';
 import { BotTaskDto } from './dto/bot-task.dto';
+import { BotSendTaskResultDto } from './dto/bot-send-task-result.dto';
 
 
 @WebSocketGateway({ 
@@ -116,6 +117,8 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
     this.requestBotData({}, client)
   }
 
+
+  @UseGuards(BotAuthGuard)
   @SubscribeMessage('bot_checkin')
   async botCheckin(@MessageBody() botCheckinDto: BotCheckinDto, @ConnectedSocket() client: Socket){
     botCheckinDto.socketId = client.id;
@@ -133,6 +136,30 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
       message: 'Bot checked-in'
     }
   }
+
+
+  @UseGuards(BotAuthGuard)
+  @SubscribeMessage('bot_send_task_result')
+  async botSendResult(@MessageBody() botResultDto: BotSendTaskResultDto, @ConnectedSocket() client: Socket){
+    this.logger.log(`incoming bot result: ${JSON.stringify(botResultDto)}`)
+    const result = await this.pattayaMessagesService.updateTask(botResultDto)
+
+    if(result.success)
+    {
+      const response: ResponseMessageDto = {
+        success: true,
+        message: result.data['result'],
+      }
+      this.server.emit(`panel_terminal_bot_task_result_${result.data['hwid']}`, response)
+    } else {
+      const response: ResponseMessageDto = {
+        success: false,
+        message: "Server cannot manipulated task result",
+      }
+      this.server.emit(`panel_terminal_bot_task_result_${result.data['hwid']}`, response)
+    }
+  }
+  
 
   @UseGuards(PanelAuthGuard)
   @SubscribeMessage('panel_request_bot_data')
@@ -160,15 +187,16 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
         success: true,
         message: `Tasked bot ${request.hwid} with command ${request.command}`,
       }
-      this.server.to(client.id).emit(`panel_terminal_bot_task_result_${request.hwid}`, response)
+      this.server.to(client.id).emit(`server_ack_terminal_bot_task_result_${request.hwid}`, response)
       this.server.to(request.socketId).emit('bot_receive_task', botTask)
     } else {
       const response: ResponseMessageDto = {
         success: false,
         message: `Failed to stamp bot task`,
       }
-      this.server.to(client.id).emit(`panel_terminal_bot_task_result_${request.hwid}`, response)
+      this.server.to(client.id).emit(`server_ack_terminal_bot_task_result_${request.hwid}`, response)
  
     }
   }
 }
+

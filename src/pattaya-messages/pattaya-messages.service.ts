@@ -3,6 +3,7 @@ import { PrismaService } from 'prisma/prisma.service';
 import { BotCheckinDto } from './dto/bot-checkin.dto';
 import { PanelSendBotTaskDto } from './dto/panel-send-bot-task.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { BotSendTaskResultDto } from './dto/bot-send-task-result.dto';
 
 @Injectable()
 export class PattayaMessagesService {
@@ -114,6 +115,34 @@ export class PattayaMessagesService {
             })
 
             return {success: true, data: newTask };
+        } catch (error) {
+            this.logger.error(`Something wrong`, error)
+            return {success: false, data: {} };
+        }
+      }
+
+
+
+      async updateTask(result: BotSendTaskResultDto){
+        try {
+
+            this.logger.log(`update bot task result`)
+            const found = await this.prisma.task.findUnique({where: {taskId: result.taskId}})
+            if(!found){
+                return {success: false, data: {} };
+            }
+
+            const updatedTask = await this.prisma.task.update(
+                {
+                    where: {
+                        taskId: found.taskId
+                    },
+                    data: {
+                        result: result.result
+                    }
+                }
+            )
+            return {success: true, data: updatedTask };
         } catch (error) {
             this.logger.error(`Something wrong`, error)
             return {success: false, data: {} };
