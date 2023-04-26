@@ -111,6 +111,7 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
   async handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
     await this.pattayaMessagesService.botOffline(client.id)
+    this.server.emit(`panel_terminal_bot_seem_disconnected_${client.id}`)
     this.requestBotData({}, client)
   }
 
