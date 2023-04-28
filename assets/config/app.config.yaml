@@ -3,7 +3,9 @@ app:
   description: "Pattaya socker.io server for Pattaya RAT project"
   version: "1.0"
   port: 3000
-  server-token: '9oqjTmHkRJFxVM865gR9VwOhz2DMddYsnAozN9j4Tus'
+  server-token:
+    - token: '9oqjTmHkRJFxVM865gR9VwOhz2DMddYsnAozN9j4Tus'
+      username: 'sk1dd3v'
   bot-token: 'zilVjQAv5ZdCk0Ybe3t5RvqhUHevwPgIVA84gRE7GRU'
   server-heartbeat-delay: 60000
   logger: true

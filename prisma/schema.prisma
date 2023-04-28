@@ -29,6 +29,7 @@ model Bot {
 
 model Task {
   id    Int     @default(autoincrement()) @id
+  panelToken String?
   taskId String? @unique
   hwid String?
   command String?

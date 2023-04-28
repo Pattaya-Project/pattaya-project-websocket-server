@@ -19,7 +19,7 @@ async function bootstrap() {
   console.log(colors.inverse(`description: ${config.app.description}`)); 
   console.log(colors.inverse(`version: ${config.app.version}`)); 
   console.log(colors.inverse(`port: ${config.app.port}`)); 
-  console.log(colors.inverse(`server-token: ${config.app['server-token']}`)); 
+  console.log(colors.inverse(`server-token: ${JSON.stringify(config.app['server-token'])}`)); 
   console.log(colors.inverse(`bot-token: ${config.app['bot-token']}`)); 
   console.log(colors.inverse(`server-heartbeat-delay: ${config.app['server-heartbeat-delay']}`)); 
   console.log(colors.inverse(`endpoint: http://localhost:${config.app.port}/`));

