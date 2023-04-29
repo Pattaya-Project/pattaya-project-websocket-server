@@ -30,4 +30,4 @@ app:
         - whoami
   bot-token: 'zilVjQAv5ZdCk0Ybe3t5RvqhUHevwPgIVA84gRE7GRU'
   server-heartbeat-delay: 60000
-  logger: true
+  logger: false
