@@ -25,4 +25,16 @@ export class PanelAuthGuard implements CanActivate {
     const incomingToken = this.configService.get<string[]>('app.server-token').find(item => item['token'] === token);
     return incomingToken
   }
+
+  validateAllowCommand(request: any): any {
+    const incomingToken = this.configService.get<string[]>('app.server-token').find(item => item['token'] === request.panelToken);
+    const tokenCheck = incomingToken === undefined ? false : true
+    if(!tokenCheck){
+      return false
+    }
+
+    const blockComamnd = incomingToken['allow-commands'].find(command => command === request.command)
+    return blockComamnd === undefined ? true : false
+
+  }
 }

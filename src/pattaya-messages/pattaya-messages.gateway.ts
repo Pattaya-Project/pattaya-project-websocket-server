@@ -71,7 +71,7 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
           }
         break;
         }
-            
+          
         case "$$$$$$ ": {
           if(!this.botGuard.validateRequest(client)){
             const response: ResponseMessageDto = {
@@ -109,7 +109,6 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
     }
 
   }
-
 
   async handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
@@ -160,12 +159,11 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
       this.server.emit(`${result.data['panelToken']}_panel_terminal_bot_task_result_${result.data['hwid']}`, response)
     }
   }
-  
 
   @UseGuards(PanelAuthGuard)
   @SubscribeMessage('panel_request_bot_data')
   async requestBotData(@MessageBody() request: any, @ConnectedSocket() client: Socket){
-    this.logger.log(`panel_request_bot_data called`)
+    this.logger.log(`panel_request_bot_data called: ${JSON.stringify(request)}`)
     const data = await this.pattayaMessagesService.getAllBots()
     const response: ResponseMessageDto = {
       success: true,
@@ -174,17 +172,29 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
     }
     this.logger.log(`response to panel_request_bot_data called: ${JSON.stringify(response)}`)
     if(request.token){
+      this.logger.log(`emit bot data to event: ${request.token}_panel_received_bot_data`)
       this.server.emit(`${request.token}_panel_received_bot_data`, response)
     }else{
+      this.logger.log(`emit bot data to event: all_panel_received_bot_data`)
       this.server.emit(`all_panel_received_bot_data`, response)
     }
-    
   }
 
   @UseGuards(PanelAuthGuard)
   @SubscribeMessage('panel_send_bot_task')
   async sendBotTask(@MessageBody() request: PanelSendBotTaskDto, @ConnectedSocket() client: Socket){
     this.logger.log(`panel_send_bot_task: ${JSON.stringify(request)}`)
+
+    if(this.panelGuard.validateAllowCommand(request)){
+      const response: ResponseMessageDto = {
+        success: false,
+        message: `Sorry! Your token unable to use ***${request.command}*** comamnd`,
+      }
+      this.server.emit(`${request.panelToken}_server_ack_not_allow_terminal_bot_task_result_${request.hwid}`, response)
+      return
+    }
+
+
     const result = await this.pattayaMessagesService.stampTask(request)
     if(result.success)
     {
@@ -201,7 +211,7 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
         message: `Failed to stamp bot task`,
       }
       this.server.emit(`${request.panelToken}_server_ack_terminal_bot_task_result_${request.hwid}`, response)
- 
+
     }
   }
 }

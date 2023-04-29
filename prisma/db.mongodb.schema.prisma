@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// npx prisma db push --schema=.\prisma\db.mongodb.schema.prisma
+// npx prisma db push --schema=.\prisma\db.mongodb.schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = "mongodb://mongo1:30001,mongo2:30002,mongo3:30003/pattayadb?replicaSet=my-replica-set"
+}
+
+model Bot {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  socketId String?
+  wanIp String?
+  lanIp String?
+  os String?
+  username String?
+  hostname String?
+  processName String?
+  processId Int?
+  architecture String?
+  integrity String?
+  country String?
+  lastSeen DateTime? @updatedAt 
+  hwid String? @unique
+}
+
+model Task {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  panelToken String?
+  taskId String? @unique
+  hwid String?
+  command String?
+  arguments String?
+  file String?
+  result String?
+}

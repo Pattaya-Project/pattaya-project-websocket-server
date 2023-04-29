@@ -6,6 +6,28 @@ app:
   server-token:
     - token: '9oqjTmHkRJFxVM865gR9VwOhz2DMddYsnAozN9j4Tus'
       username: 'sk1dd3v'
+      allow-commands:
+        - pingbot
+        - killbot
+        - cd
+        - mkdir
+        - rmdir
+        - ls
+        - pwd
+        - ps
+        - whoami
+        - shell
+        - execute-assembly
+    - token: 'oJ9z3GkU8ds8nLGmBlkShNaitfBFvVk9GIf4YoZux-4'
+      username: 'n00ber'
+      allow-commands:
+        - pingbot
+        - cd
+        - mkdir
+        - rmdir
+        - ls
+        - pwd
+        - whoami
   bot-token: 'zilVjQAv5ZdCk0Ybe3t5RvqhUHevwPgIVA84gRE7GRU'
   server-heartbeat-delay: 60000
   logger: true

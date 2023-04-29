@@ -71,11 +71,18 @@ export class PattayaMessagesService {
             if(found){
                 await this.prisma.bot.deleteMany({
                     where: {
-                        socketId: socketId
+                        hwid: found.hwid
                     }
                 })
             }
-            this.logger.log(`set bot hwid: ${found.hwid}, OFFLINE`)
+
+            await this.prisma.task.deleteMany({
+                where: {
+                    hwid: found.hwid
+                }
+            })
+
+            this.logger.log(`set bot hwid: ${found.hwid}, OFFLINE and CLEAN TASK`)
         } catch (error) {
             this.logger.error(`Something wrong`, error)
         }
