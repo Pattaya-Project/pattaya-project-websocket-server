@@ -1,7 +1,7 @@
 app:
   name: "Pattaya Server"
   description: "Pattaya socker.io server for Pattaya RAT project"
-  version: "1.0"
+  version: "[ development version ]"
   port: 3000
   server-token:
     - token: '9oqjTmHkRJFxVM865gR9VwOhz2DMddYsnAozN9j4Tus'
