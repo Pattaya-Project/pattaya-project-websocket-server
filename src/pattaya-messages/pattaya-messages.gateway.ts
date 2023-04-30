@@ -1,6 +1,6 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
 import { PattayaMessagesService } from './pattaya-messages.service';
-import { Logger, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { BotCheckinDto } from './dto/bot-checkin.dto';
 import { ResponseMessageDto } from './dto/response-message.dto';
