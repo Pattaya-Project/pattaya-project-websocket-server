@@ -118,6 +118,11 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
   }
 
 
+  getClientById(id: string) {
+    return this.server['adapter']['sids'].get(`${id}`)
+  }
+
+
   @UseGuards(BotAuthGuard)
   @SubscribeMessage('bot_checkin')
   async botCheckin(@MessageBody() botCheckinDto: BotCheckinDto, @ConnectedSocket() client: Socket){
@@ -184,6 +189,15 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
   @SubscribeMessage('panel_send_bot_task')
   async sendBotTask(@MessageBody() request: PanelSendBotTaskDto, @ConnectedSocket() client: Socket){
     this.logger.log(`panel_send_bot_task: ${JSON.stringify(request)}`)
+
+    if(!this.getClientById(request.socketId)){
+      const response: ResponseMessageDto = {
+        success: false,
+        message: `socketId: ${request.socketId} is not active! Close the current terminal and refresh bot list again!`,
+      }
+      this.server.emit(`${request.panelToken}_server_ack_not_allow_terminal_bot_task_result_${request.hwid}`, response)
+      return
+    }
 
     if(this.panelGuard.validateAllowCommand(request)){
       const response: ResponseMessageDto = {
