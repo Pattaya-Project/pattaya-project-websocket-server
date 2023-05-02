@@ -19,6 +19,7 @@ app:
         - shell
         - execute-assembly
         - upload
+        - download
     - token: 'oJ9z3GkU8ds8nLGmBlkShNaitfBFvVk9GIf4YoZux-4'
       username: 'n00ber'
       allow-commands:

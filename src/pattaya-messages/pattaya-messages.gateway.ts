@@ -156,6 +156,12 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
         message: result.data['result'],
       }
       this.server.emit(`${result.data['panelToken']}_panel_terminal_bot_task_result_${result.data['hwid']}`, response)
+      this.server.emit(`${result.data['panelToken']}_server_ack_response_file_${result.data['hwid']}`, {
+        respondingFile: result.data['respondingFile'],
+        respondingFilename: result.data['respondingFilename'],
+      })
+
+
     } else {
       const response: ResponseMessageDto = {
         success: false,
