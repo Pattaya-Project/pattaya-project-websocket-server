@@ -18,6 +18,7 @@ app:
         - whoami
         - shell
         - execute-assembly
+        - upload
     - token: 'oJ9z3GkU8ds8nLGmBlkShNaitfBFvVk9GIf4YoZux-4'
       username: 'n00ber'
       allow-commands:

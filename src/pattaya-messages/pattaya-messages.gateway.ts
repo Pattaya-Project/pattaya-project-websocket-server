@@ -11,12 +11,12 @@ import { PanelSendBotTaskDto } from './dto/panel-send-bot-task.dto';
 import { BotTaskDto } from './dto/bot-task.dto';
 import { BotSendTaskResultDto } from './dto/bot-send-task-result.dto';
 
-
 @WebSocketGateway({ 
   namespace: '/',
   cors: {
     origin: '*'
   },
+  maxHttpBufferSize: 10e6
 })
 export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
