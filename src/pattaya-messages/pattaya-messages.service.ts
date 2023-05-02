@@ -118,7 +118,8 @@ export class PattayaMessagesService {
                     command: task.command,
                     hwid: task.hwid,
                     taskId: uuidv4(),
-                    file: task.file
+                    incomingFile: task.incomingFile,
+                    incomingFilename: task.incomingFilename
                 }
             })
 
@@ -146,7 +147,9 @@ export class PattayaMessagesService {
                         taskId: found.taskId
                     },
                     data: {
-                        result: result.result
+                        result: result.result,
+                        respondingFile: result.respondingFile,
+                        respondingFilename: result.respondingFilename
                     }
                 }
             )

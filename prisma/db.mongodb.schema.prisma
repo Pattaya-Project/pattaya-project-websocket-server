@@ -36,6 +36,9 @@ model Task {
   hwid String?
   command String?
   arguments String?
-  file String?
+  incomingFile String?
+  incomingFilename String?
+  respondingFile String?
+  respondingFilename String?
   result String?
 }

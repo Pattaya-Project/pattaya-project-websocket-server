@@ -4,5 +4,6 @@ export type PanelSendBotTaskDto = {
     hwid?: string
     command?: string
     arguments?: string
-    file?: string
+    incomingFile?: string
+    incomingFilename?: string
 }
