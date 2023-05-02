@@ -16,7 +16,7 @@ import { BotSendTaskResultDto } from './dto/bot-send-task-result.dto';
   cors: {
     origin: '*'
   },
-  maxHttpBufferSize: 10e6
+  maxHttpBufferSize: 15e6
 })
 export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
@@ -24,6 +24,7 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
 
   @WebSocketServer()
   server: Server;
+
 
   constructor(
     private readonly pattayaMessagesService: PattayaMessagesService,
@@ -156,12 +157,13 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
         message: result.data['result'],
       }
       this.server.emit(`${result.data['panelToken']}_panel_terminal_bot_task_result_${result.data['hwid']}`, response)
-      this.server.emit(`${result.data['panelToken']}_server_ack_response_file_${result.data['hwid']}`, {
-        respondingFile: result.data['respondingFile'],
-        respondingFilename: result.data['respondingFilename'],
-      })
-
-
+      if(result.data['command'] == 'download')
+      {
+        this.server.emit(`${result.data['panelToken']}_server_ack_response_file_${result.data['hwid']}`, {
+          respondingFile: result.data['respondingFile'],
+          respondingFilename: result.data['respondingFilename'],
+        })
+      }
     } else {
       const response: ResponseMessageDto = {
         success: false,
