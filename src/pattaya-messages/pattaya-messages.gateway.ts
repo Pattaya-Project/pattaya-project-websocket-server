@@ -149,7 +149,6 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
   async botSendResult(@MessageBody() botResultDto: BotSendTaskResultDto, @ConnectedSocket() client: Socket){
     this.logger.log(`incoming bot result: ${JSON.stringify(botResultDto)}`)
     const result = await this.pattayaMessagesService.updateTask(botResultDto)
-
     if(result.success)
     {
       const response: ResponseMessageDto = {
@@ -173,6 +172,7 @@ export class PattayaMessagesGateway implements OnGatewayInit, OnGatewayConnectio
     }
   }
 
+  
   @UseGuards(PanelAuthGuard)
   @SubscribeMessage('panel_request_bot_data')
   async requestBotData(@MessageBody() request: any, @ConnectedSocket() client: Socket){

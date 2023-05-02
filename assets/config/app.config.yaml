@@ -13,6 +13,8 @@ app:
         - mkdir
         - rmdir
         - ls
+        - cat
+        - rm
         - pwd
         - ps
         - whoami
