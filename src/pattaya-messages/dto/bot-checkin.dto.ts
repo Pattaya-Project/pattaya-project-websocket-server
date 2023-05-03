@@ -11,4 +11,6 @@ export type BotCheckinDto = {
     integrity?: string
     country?: string
     hwid?: string
+    type?: string
+    version?: string
 }

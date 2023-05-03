@@ -23,6 +23,8 @@ model Bot {
   architecture String?
   integrity String?
   country String?
+  type String?
+  version String?
   lastSeen DateTime? @updatedAt 
   hwid String? @unique
 }
