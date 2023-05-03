@@ -26,6 +26,7 @@ model Bot {
   integrity String?
   country String?
   type String?
+  tag String?
   version String?
   lastSeen DateTime? @updatedAt 
   hwid String? @unique

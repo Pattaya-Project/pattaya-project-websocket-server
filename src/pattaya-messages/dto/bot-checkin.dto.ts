@@ -13,4 +13,5 @@ export type BotCheckinDto = {
     hwid?: string
     type?: string
     version?: string
+    tag?: string
 }

@@ -36,7 +36,8 @@ export class PattayaMessagesService {
                             integrity: bot.integrity,
                             processName: bot.processName,
                             type: bot.type,
-                            version: bot.version
+                            version: bot.version,
+                            tag: bot.tag
                         }
                     }
                 )
@@ -57,7 +58,8 @@ export class PattayaMessagesService {
                         integrity: bot.integrity,
                         processName: bot.processName,
                         type: bot.type,
-                        version: bot.version
+                        version: bot.version,
+                        tag: bot.tag
                     }
                 })
             }
